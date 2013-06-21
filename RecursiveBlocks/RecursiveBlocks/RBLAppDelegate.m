@@ -34,14 +34,14 @@
 	[self.thingiesSet addObject:thingy]; // we use existance in the set to check if we need to stop
 	
 	__weak NSSet *weakThingies = self.thingiesSet; // this is done so the block doesn't retain self
-	__block void (__weak ^weakLoop)(BOOL);
+	__block void (__weak ^weakLoop)(BOOL); // this is the weak reference, so the block isn't retained by us
 	void (^loop)(BOOL) = [^(BOOL didFinish) {
 		if ([weakThingies containsObject:thingy]) {
-			[thingy calculateHardOnRandomNumberCompletion:weakLoop];
+			[thingy calculateHardOnRandomNumberCompletion:weakLoop]; // this makes the retaining of this block the business of thingy - in case of cancellation we will be released as no one is holding on to us anymore
 		}
 	} copy];
 	weakLoop = loop;
-	loop(YES);
+	loop(YES); // as loop is a strong variable, it is retnained until after this call
 }
 
 - (IBAction)stopRecursiveLoop:(id)sender {
