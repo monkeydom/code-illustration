@@ -34,13 +34,13 @@
 	[self.thingiesSet addObject:thingy]; // we use existance in the set to check if we need to stop
 	
 	__weak NSSet *weakThingies = self.thingiesSet; // this is done so the block doesn't retain self
-	__block void(^loop)(BOOL didFinish) = ^(BOOL didFinish) {
+	__block void (__weak ^weakLoop)(BOOL);
+	void (^loop)(BOOL) = [^(BOOL didFinish) {
 		if ([weakThingies containsObject:thingy]) {
-			[thingy calculateHardOnRandomNumberCompletion:loop];
-		} else {
-			loop = nil; // release ourselves
+			[thingy calculateHardOnRandomNumberCompletion:weakLoop];
 		}
-	};
+	} copy];
+	weakLoop = loop;
 	loop(YES);
 }
 
