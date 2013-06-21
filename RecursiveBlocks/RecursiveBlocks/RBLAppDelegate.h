@@ -11,5 +11,7 @@
 @interface RBLAppDelegate : NSObject <NSApplicationDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
+- (IBAction)startRecursiveLoop:(id)sender;
+- (IBAction)stopRecursiveLoop:(id)sender;
 
 @end
